@@ -20,7 +20,7 @@ function getErrorText(error) {
   const msg = error.response?.data?.detail;
   if (typeof msg === 'string') return msg;
   if (Array.isArray(msg)) return msg.map((item) => item?.msg ?? item).join(', ');
-  return 'Ошибка запроса';
+  return 'Request error';
 }
 
 function App() {
@@ -53,7 +53,7 @@ function App() {
       setTasks(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      setTaskStatusMessage('Ошибка при загрузке задач');
+      setTaskStatusMessage('Error loading tasks');
     }
   };
 
@@ -63,7 +63,7 @@ function App() {
       setCategories(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching categories:', error);
-      setCategoryStatusMessage('Ошибка при загрузке категорий');
+      setCategoryStatusMessage('Error loading categories');
     }
   };
 
@@ -96,22 +96,22 @@ function App() {
         }
 
         if (Object.keys(patchData).length === 0) {
-          setTaskStatusMessage('Изменений нет');
+          setTaskStatusMessage('No changes');
           return;
         }
 
         await axios.patch(`${API_BASE_URL}/tasks/${editingTaskId}`, patchData);
-        setTaskStatusMessage('Задача обновлена');
+        setTaskStatusMessage('Task updated');
       } else {
         await axios.post(`${API_BASE_URL}/tasks`, { title });
-        setTaskStatusMessage('Задача создана');
+        setTaskStatusMessage('Task created');
       }
 
       resetTaskForm();
       fetchTasks();
     } catch (error) {
       console.error('Error submitting task:', error);
-      setTaskStatusMessage(`Ошибка: ${getErrorText(error)}`);
+      setTaskStatusMessage(`Error: ${getErrorText(error)}`);
     }
   };
 
@@ -128,22 +128,22 @@ function App() {
         }
 
         if (Object.keys(patchData).length === 0) {
-          setCategoryStatusMessage('Изменений нет');
+          setCategoryStatusMessage('No changes');
           return;
         }
 
         await axios.patch(`${API_BASE_URL}/categories/${editingCategoryId}`, patchData);
-        setCategoryStatusMessage('Категория обновлена');
+        setCategoryStatusMessage('Category updated');
       } else {
         await axios.post(`${API_BASE_URL}/categories`, { name });
-        setCategoryStatusMessage('Категория создана');
+        setCategoryStatusMessage('Category created');
       }
 
       resetCategoryForm();
       fetchCategories();
     } catch (error) {
       console.error('Error submitting category:', error);
-      setCategoryStatusMessage(`Ошибка: ${getErrorText(error)}`);
+      setCategoryStatusMessage(`Error: ${getErrorText(error)}`);
     }
   };
 
@@ -180,7 +180,7 @@ function App() {
       fetchTasks();
     } catch (error) {
       console.error('Error toggling task status:', error);
-      setTaskStatusMessage(`Ошибка: ${getErrorText(error)}`);
+      setTaskStatusMessage(`Error: ${getErrorText(error)}`);
     }
   };
 
@@ -193,7 +193,7 @@ function App() {
       fetchTasks();
     } catch (error) {
       console.error('Error deleting task:', error);
-      setTaskStatusMessage(`Ошибка: ${getErrorText(error)}`);
+      setTaskStatusMessage(`Error: ${getErrorText(error)}`);
     }
   };
 
@@ -206,7 +206,7 @@ function App() {
       fetchCategories();
     } catch (error) {
       console.error('Error deleting category:', error);
-      setCategoryStatusMessage(`Ошибка: ${getErrorText(error)}`);
+      setCategoryStatusMessage(`Error: ${getErrorText(error)}`);
     }
   };
 
@@ -215,21 +215,21 @@ function App() {
       <main className="App">
         <header className="hero">
           <div className="hero-head">
-            <h1>Мои задачи</h1>
-            <div className="view-switcher" role="tablist" aria-label="Переключатель разделов">
+            <h1>My Tasks</h1>
+            <div className="view-switcher" role="tablist" aria-label="Section switcher">
               <button
                 className={activeView === 'tasks' ? 'switch-btn active' : 'switch-btn'}
                 onClick={() => setActiveView('tasks')}
                 type="button"
               >
-                Задачи
+                Tasks
               </button>
               <button
                 className={activeView === 'categories' ? 'switch-btn active' : 'switch-btn'}
                 onClick={() => setActiveView('categories')}
                 type="button"
               >
-                Категории
+                Categories
               </button>
             </div>
           </div>
@@ -249,10 +249,10 @@ function App() {
                       handleTaskSubmit();
                     }
                   }}
-                  placeholder="Введите задачу"
+                  placeholder="Enter a task"
                 />
                 <button className="btn btn-primary" onClick={handleTaskSubmit} type="button">
-                  {editingTaskId ? 'Сохранить' : 'Добавить'}
+                  {editingTaskId ? 'Save' : 'Add'}
                 </button>
               </div>
 
@@ -263,13 +263,13 @@ function App() {
                     checked={isCompleted}
                     onChange={(event) => setIsCompleted(event.target.checked)}
                   />
-                  Отметить как выполненную при сохранении
+                  Mark as completed when saving
                 </label>
               )}
 
               <div className="action-row">
                 <button className="btn" onClick={resetTaskForm} type="button">
-                  {editingTaskId ? 'Отменить редактирование' : 'Очистить поле'}
+                  {editingTaskId ? 'Cancel editing' : 'Clear field'}
                 </button>
               </div>
 
@@ -278,20 +278,20 @@ function App() {
 
             <section className="panel tasks-panel">
               <div className="tasks-header">
-                <h2>Список задач</h2>
+                <h2>Task List</h2>
                 <button className="btn" onClick={fetchTasks} type="button">
-                  Обновить
+                  Refresh
                 </button>
               </div>
 
               <div className="stats">
-                <span className="stat-pill">Всего: {tasks.length}</span>
-                <span className="stat-pill">Активных: {pendingCount}</span>
-                <span className="stat-pill">Готово: {completedCount}</span>
+                <span className="stat-pill">Total: {tasks.length}</span>
+                <span className="stat-pill">Active: {pendingCount}</span>
+                <span className="stat-pill">Completed: {completedCount}</span>
               </div>
 
               {tasks.length === 0 ? (
-                <div className="empty-state">Пока пусто. Добавьте первую задачу выше.</div>
+                <div className="empty-state">Nothing here yet. Add your first task above.</div>
               ) : (
                 <ul>
                   {tasks.map((task, index) => (
@@ -299,7 +299,7 @@ function App() {
                       <button
                         className={getTaskCompleted(task) ? 'toggle done' : 'toggle'}
                         onClick={() => handleToggleCompleted(task)}
-                        aria-label="Переключить статус"
+                        aria-label="Toggle status"
                         type="button"
                       >
                         {getTaskCompleted(task) ? '✓' : ''}
@@ -309,15 +309,15 @@ function App() {
                         <span className={getTaskCompleted(task) ? 'task-title done' : 'task-title'}>
                           {getTaskTitle(task)}
                         </span>
-                        <span className="task-state">{getTaskCompleted(task) ? 'Выполнена' : 'В работе'}</span>
+                        <span className="task-state">{getTaskCompleted(task) ? 'Completed' : 'In progress'}</span>
                       </div>
 
                       <div className="task-actions">
                         <button className="btn" onClick={() => handleTaskEdit(task)} type="button">
-                          Изменить
+                          Edit
                         </button>
                         <button className="btn btn-danger" onClick={() => handleTaskDelete(task.id)} type="button">
-                          Удалить
+                          Delete
                         </button>
                       </div>
                     </li>
@@ -340,16 +340,16 @@ function App() {
                       handleCategorySubmit();
                     }
                   }}
-                  placeholder="Введите категорию"
+                  placeholder="Enter a category"
                 />
                 <button className="btn btn-primary" onClick={handleCategorySubmit} type="button">
-                  {editingCategoryId ? 'Сохранить' : 'Добавить'}
+                  {editingCategoryId ? 'Save' : 'Add'}
                 </button>
               </div>
 
               <div className="action-row">
                 <button className="btn" onClick={resetCategoryForm} type="button">
-                  {editingCategoryId ? 'Отменить редактирование' : 'Очистить поле'}
+                  {editingCategoryId ? 'Cancel editing' : 'Clear field'}
                 </button>
               </div>
 
@@ -358,18 +358,18 @@ function App() {
 
             <section className="panel tasks-panel">
               <div className="tasks-header">
-                <h2>Список категорий</h2>
+                <h2>Category List</h2>
                 <button className="btn" onClick={fetchCategories} type="button">
-                  Обновить
+                  Refresh
                 </button>
               </div>
 
               <div className="stats">
-                <span className="stat-pill">Всего: {categories.length}</span>
+                <span className="stat-pill">Total: {categories.length}</span>
               </div>
 
               {categories.length === 0 ? (
-                <div className="empty-state">Категорий пока нет.</div>
+                <div className="empty-state">No categories yet.</div>
               ) : (
                 <ul className="category-list">
                   {categories.map((category, index) => (
@@ -383,14 +383,14 @@ function App() {
 
                       <div className="task-actions">
                         <button className="btn" onClick={() => handleCategoryEdit(category)} type="button">
-                          Изменить
+                          Edit
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleCategoryDelete(category.id)}
                           type="button"
                         >
-                          Удалить
+                          Delete
                         </button>
                       </div>
                     </li>

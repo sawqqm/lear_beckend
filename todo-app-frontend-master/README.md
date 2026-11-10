@@ -1,94 +1,95 @@
-# Todo App Frontend (учебный CRUD-шаблон)
+# Todo App Frontend (educational CRUD template)
 
-Простой фронтенд-проект для обучения REST API на примере задач и категорий.
+A simple frontend project for learning REST APIs using tasks and categories.
 
-Проект повторяет учебный паттерн из `calculator-frontend`:
-- `GET` список сущностей
-- `POST` создание
-- `PATCH` редактирование
-- `DELETE` удаление
+The project follows the educational pattern from `calculator-frontend`:
+- `GET` list entities
+- `POST` create
+- `PATCH` edit
+- `DELETE` delete
 
-Категории в этом проекте реализованы отдельно, без связи с задачами, чтобы не усложнять учебный пример.
+Categories are implemented separately without a relation to tasks to keep the
+educational example simple.
 
-## Запуск
+## Running
 
 ```bash
 npm install
 npm run dev
 ```
 
-Приложение будет доступно на `http://localhost:3000`.
+The application will be available at `http://localhost:3000`.
 
-## Ожидаемое API
+## Expected API
 
-Базовый URL: `http://localhost:8080`
+Base URL: `http://localhost:8080`
 
-### 1) Получить список задач (`GET /tasks`)
+### 1) Get the task list (`GET /tasks`)
 
-Тело запроса: **отсутствует**.
+Request body: **none**.
 
-Ожидаемый ответ:
-- Статус: `200 OK`
-- Тело ответа: JSON-массив задач
+Expected response:
+- Status: `200 OK`
+- Response body: a JSON array of tasks
 
 ```json
 [
   {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "title": "Сделать ДЗ",
+    "title": "Do homework",
     "completed": false
   },
   {
     "id": "f4d8d97d-27b2-4f74-9c14-f1f8ee9b9d4f",
-    "title": "Проверить PR",
+    "title": "Review PR",
     "completed": true
   }
 ]
 ```
 
-Если задач нет:
+If there are no tasks:
 
 ```json
 []
 ```
 
-### 2) Создать задачу (`POST /tasks`)
+### 2) Create a task (`POST /tasks`)
 
-Тело запроса:
+Request body:
 
 ```json
 {
-  "title": "Подготовить урок"
+  "title": "Prepare a lesson"
 }
 ```
 
-Ожидаемый ответ:
-- Статус: `201 Created` (допустимо `200 OK`)
-- Тело ответа: созданная задача
+Expected response:
+- Status: `201 Created` (`200 OK` is also accepted)
+- Response body: the created task
 
 ```json
 {
   "id": "b1b3d9d7-7d47-4f30-a9f6-9dce7d8f43d2",
-  "title": "Подготовить урок",
+  "title": "Prepare a lesson",
   "completed": false
 }
 ```
 
-### 3) Обновить задачу (`PATCH /tasks/{id}`)
+### 3) Update a task (`PATCH /tasks/{id}`)
 
-`id` в path-параметре: строковый UUID.
+The `id` path parameter is a string UUID.
 
-Тело запроса: только изменившиеся поля (одно или несколько).
+Request body: only the changed fields (one or more).
 
-Если поменялся только `title`:
+If only the `title` changed:
 
 ```json
 {
-  "title": "Подготовить урок по REST"
+  "title": "Prepare a REST lesson"
 }
 ```
 
-Если поменялся только `completed`:
+If only `completed` changed:
 
 ```json
 {
@@ -96,113 +97,113 @@ npm run dev
 }
 ```
 
-Если поменялись оба поля:
+If both fields changed:
 
 ```json
 {
-  "title": "Подготовить урок по REST",
+  "title": "Prepare a REST lesson",
   "completed": true
 }
 ```
 
-Ожидаемый ответ:
-- Статус: `200 OK`
-- Тело ответа: обновленная задача
+Expected response:
+- Status: `200 OK`
+- Response body: the updated task
 
 ```json
 {
   "id": "b1b3d9d7-7d47-4f30-a9f6-9dce7d8f43d2",
-  "title": "Подготовить урок по REST",
+  "title": "Prepare a REST lesson",
   "completed": true
 }
 ```
 
-### 4) Удалить задачу (`DELETE /tasks/{id}`)
+### 4) Delete a task (`DELETE /tasks/{id}`)
 
-`id` в path-параметре: строковый UUID.
+The `id` path parameter is a string UUID.
 
-Тело запроса: **отсутствует**.
+Request body: **none**.
 
-Ожидаемый ответ:
-- Статус: `204 No Content`
-- Тело ответа: **отсутствует**
+Expected response:
+- Status: `204 No Content`
+- Response body: **none**
 
-### 5) Получить список категорий (`GET /categories`)
+### 5) Get the category list (`GET /categories`)
 
-Тело запроса: **отсутствует**.
+Request body: **none**.
 
-Ожидаемый ответ:
-- Статус: `200 OK`
-- Тело ответа: JSON-массив категорий
+Expected response:
+- Status: `200 OK`
+- Response body: a JSON array of categories
 
 ```json
 [
   {
     "id": "fbbf0f30-c8e8-4a5f-a9c7-2cf5b29b9a0d",
-    "name": "Учеба"
+    "name": "Study"
   },
   {
     "id": "eb455b06-6c8d-4d5d-8d76-4a0a857ff2e4",
-    "name": "Работа"
+    "name": "Work"
   }
 ]
 ```
 
-Если категорий нет:
+If there are no categories:
 
 ```json
 []
 ```
 
-### 6) Создать категорию (`POST /categories`)
+### 6) Create a category (`POST /categories`)
 
-Тело запроса:
-
-```json
-{
-  "name": "Учеба"
-}
-```
-
-Ожидаемый ответ:
-- Статус: `201 Created` (допустимо `200 OK`)
-- Тело ответа: созданная категория
+Request body:
 
 ```json
 {
-  "id": "fbbf0f30-c8e8-4a5f-a9c7-2cf5b29b9a0d",
-  "name": "Учеба"
+  "name": "Study"
 }
 ```
 
-### 7) Обновить категорию (`PATCH /categories/{id}`)
-
-`id` в path-параметре: строковый UUID.
-
-Тело запроса: только изменившиеся поля.
-
-Если поменялось название:
-
-```json
-{
-  "name": "Домашние дела"
-}
-```
-
-Ожидаемый ответ:
-- Статус: `200 OK`
-- Тело ответа: обновленная категория
+Expected response:
+- Status: `201 Created` (`200 OK` is also accepted)
+- Response body: the created category
 
 ```json
 {
   "id": "fbbf0f30-c8e8-4a5f-a9c7-2cf5b29b9a0d",
-  "name": "Домашние дела"
+  "name": "Study"
 }
 ```
 
-Если категория не найдена:
-- Статус: `404 Not Found`
-- Пример тела ответа:
+### 7) Update a category (`PATCH /categories/{id}`)
+
+The `id` path parameter is a string UUID.
+
+Request body: only the changed fields.
+
+If the name changed:
+
+```json
+{
+  "name": "Household"
+}
+```
+
+Expected response:
+- Status: `200 OK`
+- Response body: the updated category
+
+```json
+{
+  "id": "fbbf0f30-c8e8-4a5f-a9c7-2cf5b29b9a0d",
+  "name": "Household"
+}
+```
+
+If the category is not found:
+- Status: `404 Not Found`
+- Example response body:
 
 ```json
 {
@@ -210,19 +211,19 @@ npm run dev
 }
 ```
 
-### 8) Удалить категорию (`DELETE /categories/{id}`)
+### 8) Delete a category (`DELETE /categories/{id}`)
 
-`id` в path-параметре: строковый UUID.
+The `id` path parameter is a string UUID.
 
-Тело запроса: **отсутствует**.
+Request body: **none**.
 
-Ожидаемый ответ:
-- Статус: `204 No Content`
-- Тело ответа: **отсутствует**
+Expected response:
+- Status: `204 No Content`
+- Response body: **none**
 
-Если категория не найдена:
-- Статус: `404 Not Found`
-- Пример тела ответа:
+If the category is not found:
+- Status: `404 Not Found`
+- Example response body:
 
 ```json
 {
