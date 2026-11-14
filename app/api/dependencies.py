@@ -7,9 +7,8 @@ from app.services.categories import CategoriesService
 from app.services.task import TaskService
 
 
-
 def get_task_service(db: Session = Depends(get_db)):
-    return TaskService()
+    return TaskService(db)
 
-def get_categories_service():
-    return CategoriesService()
+def get_categories_service(db: Session = Depends(get_db)):
+    return CategoriesService(db)

@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-#TASKS
+
 class TaskSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: str
     title: str
     completed: bool
@@ -11,22 +12,8 @@ class TaskCreateSchema(BaseModel):
     title: str
 
 
-class TaskUpdataShema(BaseModel):
+
+class TaskUpdateSchema(BaseModel):
     title: str | None = None
     completed: bool | None = None
     
-    
-#CATEGORIES
-class CategoriesSchema(BaseModel):
-    id: str
-    name: str
-    completed: bool
-    
-    
-class CategoriesCreateSchema(BaseModel):
-    name: str
-    
-    
-class CategoriesUpdateSchema(BaseModel):
-    name: str | None = None
-    completed: bool | None = None

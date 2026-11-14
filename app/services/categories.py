@@ -1,14 +1,19 @@
 from sqlalchemy.orm import Session
-from app.repositories.task import TaskRepository
-from app.schemas.task import  CategoriesSchema, CategoriesCreateSchema, CategoriesUpdateSchema
+
+from app.repositories.categories import CategoriesRepository
+from app.schemas.categories import (
+    CategoriesCreateSchema,
+    CategoriesSchema,
+    CategoriesUpdateSchema,
+)
 
 
 class CategoriesNotFound(Exception):
-    
+    pass
 class CategoriesService:
     def __init__(self, db: Session) -> None:
         self.db = db
-        self.task_repository = TaskRepository(db)
+        self.categories_repository = CategoriesRepository(db)
     def list_categories(self) -> list[CategoriesSchema]:
         categories_orm = self.categories_repository.get_all_categories()
         return [CategoriesSchema.model_validate(categories) for categories in categories_orm]
@@ -23,11 +28,11 @@ class CategoriesService:
         category_id: str,
         categories_update: CategoriesUpdateSchema) -> CategoriesSchema:
         
-        try:
-            category_for_update = self.categories_repository.get_category_by_id(category_id=category_id)
-        except Exception:
+    
+        category_for_update = self.categories_repository.get_category_by_id(category_id=category_id)
+        if not category_for_update:
             raise CategoriesNotFound("Category not found")
-        if categories_update.name:
+        if categories_update.name is not None:
             category_for_update.name = categories_update.name
         if categories_update.completed is not None:
             category_for_update.completed = categories_update.completed
@@ -35,8 +40,8 @@ class CategoriesService:
         return CategoriesSchema.model_validate(category_for_update)
         
     def delete_categories(self, category_id: str) -> None:
-        try:
-            category_for_delete = self.categories_repository.get_category_by_id(category_id=category_id)
-        except Exception:
+        category_for_delete = self.categories_repository.get_category_by_id(category_id=category_id)
+        if not category_for_delete:
             raise CategoriesNotFound("Category not found")
-        self.categories_repository.delete(category_for_delete)
+        self.categories_repository.delete_category(category_for_delete)
+        self.db.commit()
