@@ -7,7 +7,6 @@ from app.schemas.categories import (
     CategoriesUpdateSchema,
 )
 from app.services.categories import CategoriesNotFound, CategoriesService
-from app.services.task import TaskNotFound
 
 router_categories = APIRouter(prefix="/categories")
 
@@ -21,7 +20,7 @@ def create_categories(
     payload: CategoriesCreateSchema, 
     categories_service: CategoriesService = Depends(get_categories_service)
     ) -> CategoriesSchema:
-    return categories_service.create_categories(categories_create=payload)
+    return categories_service.create_category(categories_create=payload)
 
 
 @router_categories.patch("/{categories_id}")
@@ -31,8 +30,8 @@ def update_categories(
     categories_service: CategoriesService = Depends(get_categories_service)
     ) -> CategoriesSchema:
     try:
-        return categories_service.update_categories(categories_id=categories_id, categories_update=payload)
-    except TaskNotFound:
+        return categories_service.update_category(category_id=categories_id, categories_update=payload)
+    except CategoriesNotFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")  
                     
 @router_categories.delete("/{categories_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -41,6 +40,6 @@ def delete_categories(
     categories_service: CategoriesService = Depends(get_categories_service)
     ) -> None:
     try:
-        return categories_service.delete_categories(categories_id=categories_id)
-    except TaskNotFound:
+        return categories_service.delete_category(category_id=categories_id)
+    except CategoriesNotFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")

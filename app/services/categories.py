@@ -10,6 +10,8 @@ from app.schemas.categories import (
 
 class CategoriesNotFound(Exception):
     pass
+
+
 class CategoriesService:
     def __init__(self, db: Session) -> None:
         self.db = db
@@ -18,7 +20,7 @@ class CategoriesService:
         categories_orm = self.categories_repository.get_all_categories()
         return [CategoriesSchema.model_validate(categories) for categories in categories_orm]
     
-    def create_category(self, category_id: str, categories_create: CategoriesCreateSchema) -> CategoriesSchema:
+    def create_category(self, categories_create: CategoriesCreateSchema) -> CategoriesSchema:
         categories_orm = self.categories_repository.create_category(name=categories_create.name)
         self.db.commit()
         return CategoriesSchema.model_validate(categories_orm)
@@ -39,7 +41,7 @@ class CategoriesService:
         self.db.commit()
         return CategoriesSchema.model_validate(category_for_update)
         
-    def delete_categories(self, category_id: str) -> None:
+    def delete_category(self, category_id: str) -> None:
         category_for_delete = self.categories_repository.get_category_by_id(category_id=category_id)
         if not category_for_delete:
             raise CategoriesNotFound("Category not found")

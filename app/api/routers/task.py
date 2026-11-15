@@ -25,16 +25,16 @@ def update_task(
     task_service: TaskService = Depends(get_task_service)
     ) -> TaskSchema:
     try:
-        return task_service.update_task(tasks_id=tasks_id,task_update=payload)
+        return task_service.update_task(task_id=tasks_id, task_update=payload)
     except TaskNotFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
 
-@router_task.delete(
-    "/{tasks_id}", 
-    status_code=status.HTTP_204_NO_CONTENT, 
-    task_service: TaskService = Depends(get_task_service))
-def delete_task(tasks_id: str ) -> None:
+@router_task.delete("/{tasks_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(
+    tasks_id: str,
+    task_service: TaskService = Depends(get_task_service),
+) -> None:
     try:
-        return task_service.delete_task(tasks_id=tasks_id)
+        return task_service.delete_task_by_id(task_id=tasks_id)
     except TaskNotFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")

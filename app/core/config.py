@@ -1,15 +1,14 @@
-from pydantic_settings import SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from pydantic import BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL: str 
-    cors_allowed_origins: list[str]
-    
+    DATABASE_URL: str = "sqlite:///./app.db"
+    CORS_ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
+
     model_config = SettingsConfigDict(
         env_file=".env",
-        extra="ignore"
+        extra="ignore",
     )
-    
-settings = Settings()
 
+
+settings = Settings()
